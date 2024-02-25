@@ -63,9 +63,9 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Hours register
         uint8_t hour : 4;
         uint8_t hour_10 : 2;
-        unit8_t hour_12h : 4;
-        unit8_t hour_12h_10 : 1;
-        bool hour_12h_ampm: 0;
+        uint8_t hour_12h : 4;
+        uint8_t hour_12h_10 : 1;
+        uint8_t hour_12h_ampm : 1;
         uint8_t : 2;
 
         // Days register
@@ -94,9 +94,9 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Hour Alarm register
         uint8_t hour_alarm : 4;
         uint8_t hour_alarm_10 : 2;
-        unit8_t hour_alarm_12h : 4;
-        unit8_t hour_alarm_12h_10 : 1;
-        bool hour_alarm_12h_ampm: 0;
+        uint8_t hour_alarm_12h : 4;
+        uint8_t hour_alarm_12h_10 : 1;
+        uint8_t hour_alarm_12h_ampm : 1;
         uint8_t : 1;
         bool hour_alarm_enabled : 1;
 

@@ -78,6 +78,8 @@ void PCF8523Component::write_time() {
   pcf8523_.reg.second_10 = now.second / 10;
   pcf8523_.reg.stop = false;
 
+  pcf8523_.reg.power_management = 000;
+
   this->write_rtc_();
 }
 
