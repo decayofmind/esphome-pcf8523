@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "esphome-pcf8523"
+version = "0.1.0"
+description = ""
+authors = ["decayofmind <r.komkov@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.9"
+esphome = "^2024.2.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+
+[tool.black]
+target-version = ["py39", "py310"]
+exclude = 'generated'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
