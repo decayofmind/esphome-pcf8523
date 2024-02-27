@@ -33,7 +33,7 @@ void PCF8523Component::read_time() {
   if (!this->read_rtc_()) {
     return;
   }
-  if (pcf8523_.reg.stop) {
+  if (pcf8523_.reg.osc_stop) {
     ESP_LOGW(TAG, "RTC halted, not syncing to system clock.");
     return;
   }
@@ -76,9 +76,11 @@ void PCF8523Component::write_time() {
   pcf8523_.reg.minute_10 = now.minute / 10;
   pcf8523_.reg.second = now.second % 10;
   pcf8523_.reg.second_10 = now.second / 10;
-  pcf8523_.reg.stop = false;
+  pcf8523_.reg.osc_stop = false;
 
-  pcf8523_.reg.power_management = 000;
+  // Make sure power management is ON just in case
+  //
+  pcf8523_.reg.power_management = 0b000;
 
   this->write_rtc_();
 }
@@ -88,10 +90,10 @@ bool PCF8523Component::read_rtc_() {
     ESP_LOGE(TAG, "Can't read I2C data.");
     return false;
   }
-  ESP_LOGD(TAG, "Read  %0u%0u:%0u%0u:%0u%0u 20%0u%0u-%0u%0u-%0u%0u  STOP:%s", pcf8523_.reg.hour_10,
+  ESP_LOGD(TAG, "Read  %0u%0u:%0u%0u:%0u%0u 20%0u%0u-%0u%0u-%0u%0u  OSC:%s CLKOUT:%0u", pcf8523_.reg.hour_10,
            pcf8523_.reg.hour, pcf8523_.reg.minute_10, pcf8523_.reg.minute, pcf8523_.reg.second_10, pcf8523_.reg.second,
            pcf8523_.reg.year_10, pcf8523_.reg.year, pcf8523_.reg.month_10, pcf8523_.reg.month, pcf8523_.reg.day_10,
-           pcf8523_.reg.day, ONOFF(!pcf8523_.reg.stop));
+           pcf8523_.reg.day, ONOFF(!pcf8523_.reg.osc_stop), pcf8523_.reg.clkout_control);
  
   return true;
 }
@@ -101,10 +103,10 @@ bool PCF8523Component::write_rtc_() {
     ESP_LOGE(TAG, "Can't write I2C data.");
     return false;
   }
-  ESP_LOGD(TAG, "Write %0u%0u:%0u%0u:%0u%0u 20%0u%0u-%0u%0u-%0u%0u  STOP:%s", pcf8523_.reg.hour_10,
+  ESP_LOGD(TAG, "Write %0u%0u:%0u%0u:%0u%0u 20%0u%0u-%0u%0u-%0u%0u  OSC:%s CLKOUT:%0u", pcf8523_.reg.hour_10,
            pcf8523_.reg.hour, pcf8523_.reg.minute_10, pcf8523_.reg.minute, pcf8523_.reg.second_10, pcf8523_.reg.second,
            pcf8523_.reg.year_10, pcf8523_.reg.year, pcf8523_.reg.month_10, pcf8523_.reg.month, pcf8523_.reg.day_10,
-           pcf8523_.reg.day, ONOFF(!pcf8523_.reg.stop));
+           pcf8523_.reg.day, ONOFF(!pcf8523_.reg.osc_stop), pcf8523_.reg.clkout_control);
   return true;
 }
 } // namespace pcf8523

@@ -22,14 +22,14 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
     union PCF8523Reg {
       struct {
         // Control_1 register
-        uint8_t correction_int : 1;
+        bool correction_int : 1;
         uint8_t alarm_int_enabled : 1;
         uint8_t second_int_enabled : 1;
-        uint8_t hour_mode : 1;
-        uint8_t sw_reset : 1;
+        bool am_pm : 1; // should be always false a component supports 24h mode only
+        bool soft_reset : 1;
         bool stop : 1;
         uint8_t : 1;
-        uint8_t cap_sel : 1;
+        bool cap_12pf : 1;
 
         // Control_2 register
         uint8_t countdown_timer_b : 1;
@@ -44,16 +44,15 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Control_3 register
         uint8_t battery_low_int : 1;
         uint8_t battery_switch_int : 1;
-        uint8_t battery_status : 1;
         uint8_t battery_low_flag : 1;
-        uint8_t battery_switch_flog : 1;
+        uint8_t battery_switch_flag : 1;
         uint8_t : 1;
         uint8_t power_management : 3;
 
         // Seconds register
         uint8_t second : 4;
         uint8_t second_10 : 3;
-        bool clock_int : 1;
+        bool osc_stop : 1;
 
         // Minutes register
         uint8_t minute : 4;
@@ -63,9 +62,6 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Hours register
         uint8_t hour : 4;
         uint8_t hour_10 : 2;
-        uint8_t hour_12h : 4;
-        uint8_t hour_12h_10 : 1;
-        uint8_t hour_12h_ampm : 1;
         uint8_t : 2;
 
         // Days register
@@ -94,9 +90,6 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Hour Alarm register
         uint8_t hour_alarm : 4;
         uint8_t hour_alarm_10 : 2;
-        uint8_t hour_alarm_12h : 4;
-        uint8_t hour_alarm_12h_10 : 1;
-        uint8_t hour_alarm_12h_ampm : 1;
         uint8_t : 1;
         bool hour_alarm_enabled : 1;
 
@@ -118,7 +111,7 @@ class PCF8523Component : public time::RealTimeClock, public i2c::I2CDevice {
         // Timer and CLKOUT register
         uint8_t timer_b_enabled : 1;
         uint8_t timer_a_enabled : 2;
-        uint8_t clkout_freq : 3;
+        uint8_t clkout_control : 3;
         uint8_t timer_b_int_mode : 1;
         uint8_t timer_a_int_mode : 1;
 
